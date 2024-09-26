@@ -1,0 +1,23 @@
+# Start from the official Golang base image
+FROM golang:1.23-alpine
+
+EXPOSE 4001
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+ENV CGO_ENABLED=0
+RUN go install -ldflags "-s -w -extldflags '-static'" github.com/go-delve/delve/cmd/dlv@latest
+
+# Copy go mod and sum files
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
+RUN go build -gcflags "all=-N -l" -o test-api ./cmd
+
+CMD [ "/go/bin/dlv", "exec", "/app/test-api", "--listen=:4001", "--headless=true", "--continue", "--log=true", "--log-dest=1", "--accept-multiclient", "--api-version=2" ]
+

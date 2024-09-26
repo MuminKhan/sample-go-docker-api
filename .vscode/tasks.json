@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "command": "docker build ${workspaceFolder}/api -t test-api-debug -f ${workspaceFolder}/api/dockerfile.debug",
+            "label": "api-debugging-container-build",
+        },
+        {
+            "type": "shell",
+            "label": "api-debugging-container-up",
+            "isBackground": true,
+            "command": "docker run -p 8001:8001 -p 4001:4001 test-api-debug",
+            "dependsOn": [
+                "api-debugging-container-build"
+            ],
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".",
+                        "endsPattern": ".",
+                    }
+                }
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "api-debugging-container-down",
+            "command": "docker stop $(docker ps -a -q --filter ancestor=test-api-debug) && docker rm $(docker ps -a -q --filter ancestor=test-api-debug)",
+        }
+    ],
+}

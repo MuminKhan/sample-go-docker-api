@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker Debug",
+            "type": "go",
+            "debugAdapter": "dlv-dap",
+            "request": "attach",
+            "mode": "remote",
+            "port": 4001,
+            "showLog": true,
+            "trace": "verbose",
+            "internalConsoleOptions": "openOnSessionStart",
+            "preLaunchTask": "api-debugging-container-up",
+            "postDebugTask": "api-debugging-container-down",
+            "substitutePath": [
+                {
+                    "from": "${workspaceFolder}/api",
+                    "to": "/app"
+                },
+            ],
+        },
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/api/cmd/api.go",
+            "env": {},
+            "args": [],
+            "showLog": true,
+            "trace": "verbose",
+            "internalConsoleOptions": "openOnSessionStart",
+        }
+    ]
+}
