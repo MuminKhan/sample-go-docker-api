@@ -10,7 +10,7 @@
             "type": "shell",
             "label": "api-debugging-container-up",
             "isBackground": true,
-            "command": "docker run -p 8001:8001 -p 4001:4001 test-api-debug",
+            "command": "docker run --security-opt=seccomp:unconfined -p 8001:8001 -p 4001:4001 -v ${workspaceFolder}/api:/app --name test-api-debug test-api-debug",
             "dependsOn": [
                 "api-debugging-container-build"
             ],

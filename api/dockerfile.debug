@@ -16,8 +16,6 @@ COPY go.sum ./
 RUN go mod download
 
 # Copy the source from the current directory to the Working Directory inside the container
-COPY . .
-RUN go build -gcflags "all=-N -l" -o test-api ./cmd
+#CMD [ "/go/bin/dlv", "exec", "/app/test-api", "--listen=:4001", "--headless=true", "--continue", "--log=true", "--accept-multiclient", "--api-version=2" ]
 
-CMD [ "/go/bin/dlv", "exec", "/app/test-api", "--listen=:4001", "--headless=true", "--continue", "--log=true", "--log-dest=1", "--accept-multiclient", "--api-version=2" ]
-
+CMD ["/go/bin/dlv", "dap", "--listen=:4001", "--log"]
